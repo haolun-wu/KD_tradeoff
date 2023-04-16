@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class model_MF(nn.Module):
@@ -15,4 +16,18 @@ class model_MF(nn.Module):
         U = self.user_emb(u_id)
         I = self.item_emb(i_id)
         return (U * I).sum(1)
-        # return (U * I).sum(1)
+
+
+class Controller(nn.Module):
+    def __init__(self, dim1, device):
+        super(Controller, self).__init__()
+
+        self.linear1 = nn.Linear(dim1, 6, bias=True).to(device)
+        self.linear2 = nn.Linear(6, 1, bias=False).to(device)
+
+    def forward(self, x):
+        z1 = torch.relu(self.linear1(x))
+        res = F.sigmoid(self.linear2(z1))
+        # res = F.softplus(self.linear2(z1))
+
+        return res
