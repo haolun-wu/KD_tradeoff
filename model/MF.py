@@ -22,11 +22,13 @@ class Controller(nn.Module):
     def __init__(self, dim1, device):
         super(Controller, self).__init__()
 
-        self.linear1 = nn.Linear(dim1, 6, bias=True).to(device)
-        self.linear2 = nn.Linear(6, 1, bias=False).to(device)
+        self.linear1 = nn.Linear(dim1, 16, bias=True).to(device)
+        self.linear2 = nn.Linear(16, 1, bias=False).to(device)
+        # self.linear3 = nn.Linear(4, 1, bias=False).to(device)
 
     def forward(self, x):
         z1 = torch.relu(self.linear1(x))
+        # z2 = torch.relu(self.linear2(z1))
         res = F.sigmoid(self.linear2(z1))
         # res = F.softplus(self.linear2(z1))
 
